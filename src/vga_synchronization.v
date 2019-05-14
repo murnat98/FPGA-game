@@ -40,7 +40,7 @@ begin
 			h_sync <= 1'b1;
 		end
 
-		if (h_ctr <= AH_TIME + BH_TIME + CH_TIME + DH_TIME && h_ctr > AH_TIME + BH_TIME + CH_TIME)
+		if (h_ctr > AH_TIME + BH_TIME + CH_TIME)
 		begin
 			red   <= 8'd255;
 			green <= 8'd0;

@@ -21,6 +21,9 @@ assign sync_n = 1'b0;
 
 reg [10:0] h_ctr = 1'b0;
 
+/**
+ * horizontal synchronization
+ */
 always @(posedge clk)
 begin
 	h_sync <= 1'b1;
@@ -37,11 +40,11 @@ begin
 			h_sync <= 1'b1;
 		end
 
-		if (h_ctr <= AH_TIME + BH_TIME + CH_TIME + DH_TIME && h_ctr >= AH_TIME + BH_TIME + CH_TIME)
+		if (h_ctr <= AH_TIME + BH_TIME + CH_TIME + DH_TIME && h_ctr > AH_TIME + BH_TIME + CH_TIME)
 		begin
-			red <= 8'd255;
+			red   <= 8'd255;
 			green <= 8'd0;
-			blue <= 8'd0;
+			blue  <= 8'd0;
 		end
 	end
 	else
@@ -49,7 +52,7 @@ begin
 		h_ctr <= 1'b0;
 	end
 
-	h_ctr = h_ctr + 1;
+	h_ctr <= h_ctr + 1;
 end
 
 endmodule

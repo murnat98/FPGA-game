@@ -23,7 +23,7 @@ assign next_bit =
 always @(posedge clk)
 begin
 	if (rst)
-		shift_reg <= 32'h00000001;
+		shift_reg <= 1;
 	else
 	if (enable)
 		shift_reg <= {next_bit, shift_reg[31:1]};

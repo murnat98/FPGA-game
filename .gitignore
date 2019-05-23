@@ -1,6 +1,7 @@
 *.mpf
 *.mti
 *.wlf
+*.vstf
 /work
 /src/*.bak
 /test/*.bak

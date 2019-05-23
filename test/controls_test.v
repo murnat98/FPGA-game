@@ -4,52 +4,56 @@
 module controls_test();
 
 task failed_test_dump;
-input key_up, key_down, move;
+input key_left, key_right, move;
 begin
-	$display("Test failed!\nkey_up=%d; key_down=%d => move=%d", key_up, key_down, move);
+	$display("Test failed!\nkey_up=%d; key_down=%d => move=%d", key_left, key_right, move);
 end
 endtask
 
-reg key_up, key_down;
+reg clk = 0, rst;
+reg key_left = 1, key_right = 1;
 wire [1:0] move;
 
 controls cntr_test
 (
-	.key_up  (key_up),
-	.key_down(key_down),
-	.move    (move)
+	.clk(clk),
+	.rst(rst),
+	.key_left (key_left),
+	.key_right(key_right),
+	.move     (move)
 );
 
-initial begin
-	
+always
+begin
 	#1;
-	key_up = 0;
-	key_down = 0;
+	clk = ~clk;
+end
+
+initial 
+begin
+	rst = 1;
+	#10; 
+	rst = 0;
+	#2;
+	key_left = 1;
+	key_right = 1;
 	if (move != 2'd2) begin
-		failed_test_dump(key_up, key_down, move);
+		failed_test_dump(key_left, key_right, move);
 	end
 
-	#1;
-	key_up = 1;
-	key_down = 0;
+	#2;
+	key_left = 1;
+	key_right = 0;
 	if (move != 2'd0) begin
-		failed_test_dump(key_up, key_down, move);
+		failed_test_dump(key_left, key_right, move);
 	end
 
-	#1;
-	key_up = 0;
-	key_down = 1;
-	if (move != 2'd1) begin
-		failed_test_dump(key_up, key_down, move);
-	end
-
-	#1;
-	key_up = 1;
-	key_down = 1;
+	#2;
+	key_left = 1;
+	key_right = 1;
 	if (move != 2'd2) begin
-		failed_test_dump(key_up, key_down, move);
+		failed_test_dump(key_left, key_right, move);
 	end
-	
 end
 
 endmodule

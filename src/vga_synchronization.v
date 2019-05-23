@@ -63,7 +63,7 @@ reg bullet_draw_permit;
 
 localparam OBJECT_WIDTH       = 50;
 localparam OBJECT_HEIGHT      = 50;
-localparam OBJECT_VELOCITY    = 5;
+localparam OBJECT_VELOCITY    = 6;
 localparam UNDEFINED_POSITION = 1000;
 localparam PLANE_VELOCITY     = 40;
 

@@ -3,6 +3,7 @@ module game
 	input clk50,
 	input main_reset,
 	input key_0,
+	input key_1,
 	input key_2,
 	output [7:0] main_red,
 	output [7:0] main_green,
@@ -16,6 +17,7 @@ module game
 
 wire clk25;
 wire [1:0] move;
+wire bullet;
 wire [10:0] random_number;
 wire [10:0] object_position;
 
@@ -33,6 +35,7 @@ vga_synchronization vga
 	.reset(main_reset),
 	.object_position(object_position),
 	.move(move),
+	.bullet(bullet),
 	.red(main_red),
 	.green(main_green),
 	.blue(main_blue),
@@ -64,6 +67,14 @@ controls controls_inst
 	.key_left(key_2),
 	.key_right(key_0),
 	.move(move)
+);
+
+bullet bullet_inst
+(
+	.clk(clk25),
+	.rst(main_reset),
+	.key_1(key_1),
+	.bullet(bullet)
 );
 
 endmodule

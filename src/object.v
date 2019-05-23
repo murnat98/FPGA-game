@@ -8,7 +8,7 @@ module object
 
 parameter UNDEFINED_POSITION = 1000;
 
-reg [31:0] timer = 0;
+reg [24:0] timer = 0;
 
 always @(posedge clk)
 begin
@@ -27,7 +27,7 @@ begin
 		else
 		begin
 			timer <= 1;
-			object_position <= UNDEFINED_POSITION;
+			object_position <= random_number;
 		end
 	end
 end

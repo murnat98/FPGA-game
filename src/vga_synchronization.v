@@ -33,32 +33,7 @@ assign sync_n  = 1'b0;
 reg [10:0] h_ctr = 11'b0;
 reg [10:0] v_ctr = 11'b0;
 
-/*
-task draw_square;
-input [10:0] posx_start;
-input [10:0] posx_end;
-input [10:0] posy_start;
-input [10:0] posy_end;
 
-begin
-	if (h_ctr >= X_START + posx_start && h_ctr <= X_START + posx_end)
-	begin
-		if (v_ctr >= Y_START + posy_start && v_ctr <= Y_START + posy_end)
-		begin
-			red   <= 8'd255;
-			green <= 8'd0;
-			blue  <= 8'd0;
-		end
-	end
-	else
-	begin
-		red   <= 8'd0;
-		green <= 8'd0;
-		blue  <= 8'd0;
-	 end
-end
-endtask
-*/
 /**
  * Plane draw.
  */
@@ -68,10 +43,23 @@ localparam PLANE_POSY_START = 430;
 localparam PLANE_POSX_END = 340;
 localparam PLANE_POSY_END = 480;
 
+reg [10:0] y_cntr;
+reg [10:0] object_position_save;
+reg draw_permit;
+
+localparam OBJECT_WIDTH       = 50;
+localparam OBJECT_HEIGHT      = 22;
+localparam UNDEFINED_POSITION = 1000;
+
 always @(posedge clk)
 begin
-	// draw_square(PLANE_POSX_START, PLANE_POSX_END, PLANE_POSY_START, PLANE_POSY_END);
-	if (!reset)
+	if (reset)
+	begin
+		y_cntr <= 0;
+		draw_permit <= 0;
+		object_position_save <= 0;
+	end
+	else
 	begin
 		if (h_ctr >= X_START + PLANE_POSX_START && h_ctr <= X_START + PLANE_POSX_END)
 		begin
@@ -84,46 +72,38 @@ begin
 		end
 		else
 		begin
-			red   <= 8'd0;
-			green <= 8'd0;
-			blue  <= 8'd0;
-		end
-	end
-end
-
-/**
- * object position.
- */
- 
-reg [10:0] y_cntr;
-reg draw_permit;
-
-localparam OBJECT_WIDTH       = 50;
-localparam OBJECT_HEIGHT      = 50;
-localparam UNDEFINED_POSITION = 1000;
- 
-always @(posedge clk)
-begin
-	if (reset)
-	begin
-		y_cntr <= 0;
-		draw_permit <= 0;
-	end
-	else
-	begin
-		if (object_position != UNDEFINED_POSITION || draw_permit)
-		begin
-			draw_permit <= 1;
-	
-			// draw_square(object_position, object_position + OBJECT_WIDTH, y_cntr, y_cntr + OBJECT_HEIGHT);
-			if (h_ctr >= X_START + object_position && h_ctr <= X_START + object_position + OBJECT_WIDTH)
+			if (object_position != UNDEFINED_POSITION || draw_permit)
 			begin
-				if (v_ctr >= Y_START + y_cntr && v_ctr <= Y_START + y_cntr + OBJECT_HEIGHT)
+				draw_permit <= 1;
+				
+				if (object_position != UNDEFINED_POSITION && y_cntr == 0)
 				begin
-					red   <= 8'd255;
-					green <= 8'd0;
-					blue  <= 8'd0;
-				end
+					object_position_save <= object_position;
+				end		
+				
+				if (h_ctr >= X_START + 100 && h_ctr <= X_START + 100 + OBJECT_WIDTH)
+				begin
+					if (v_ctr >= Y_START && v_ctr <= Y_START + OBJECT_HEIGHT)
+					begin
+						red   <= 8'd0;
+						green <= 8'd255;
+						blue  <= 8'd0;
+					end
+					else
+					begin
+						red   <= 8'd0;
+						green <= 8'd0;
+						blue  <= 8'd0;
+					end
+				end		
+					
+				y_cntr <= y_cntr + 1;
+			
+				if (y_cntr > 500)
+				begin
+					y_cntr <= 0;
+					draw_permit <= 1;
+				end	
 			end
 			else
 			begin
@@ -131,15 +111,19 @@ begin
 				green <= 8'd0;
 				blue  <= 8'd0;
 			end
-	
-			y_cntr <= y_cntr + 1;
+		end
 		
-			if (y_cntr > DV_TIME)
-			begin
-				y_cntr <= 0;
-				draw_permit <= 0;
-			end	
-		end	
+//		if (h_ctr < X_START + PLANE_POSX_START      || (h_ctr > X_START + PLANE_POSX_END && 
+//			 h_ctr < X_START + object_position_save) || h_ctr > X_START + object_position_save + OBJECT_WIDTH)
+//		begin
+//			if (v_ctr < Y_START + PLANE_POSY_START || (v_ctr > Y_START + PLANE_POSY_END) &&
+//				(v_ctr < Y_START + y_cntr)          || v_ctr > Y_START + y_cntr + OBJECT_HEIGHT)
+//			begin
+//				red   <= 8'd0;
+//				green <= 8'd0;
+//				blue  <= 8'd0;
+//			end
+//		end
 	end
 end
 

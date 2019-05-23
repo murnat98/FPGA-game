@@ -41,7 +41,7 @@ vga_synchronization vga
 
 lfsr lfsr_inst
 (
-	.clk(clk50),
+	.clk(clk25),
 	.rst(main_reset),
 	.enable(en),
 	.out(random_number)
@@ -49,7 +49,7 @@ lfsr lfsr_inst
 
 object object_inst
 (
-	.clk(clk50),
+	.clk(clk25),
 	.rst(main_reset),
 	.random_number(random_number),
 	.object_position(object_position)
